@@ -1,0 +1,59 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+      classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.6'
+  }
+}
+
+plugins {
+  id "java"
+  id "idea"
+  id "application"
+  id "com.google.protobuf" version "0.7.6"
+}
+
+idea {
+  project {
+    jdkName="1.8"
+    languageLevel="1.8"
+  }
+}
+repositories {
+  jcenter()
+}
+
+dependencies {
+  // Kafka Java API for producing messages
+  compile "org.apache.kafka:kafka-clients:0.9.0.1"
+
+  // Google protobuf
+  compile "com.google.protobuf:protobuf-java:3.0.0-alpha-3"
+
+  // Google json serialization framework - gson
+  compile "org.easygson:easygson:1.3.1"
+
+  compile 'org.slf4j:slf4j-api:1.7.12'
+  testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "2.12"
+}
+
+protobuf {
+  protoc {
+    // Download from repositories
+    artifact = 'com.google.protobuf:protoc:3.0.0-alpha-3'
+  }
+  generatedFilesBaseDir = "$projectDir/src/generated"
+  generateProtoTasks {
+    all().each {task ->
+
+    }
+    ofSourceSet("main")
+  }
+}
+
+mainClassName="deepbi.events.DeepBiProducer"

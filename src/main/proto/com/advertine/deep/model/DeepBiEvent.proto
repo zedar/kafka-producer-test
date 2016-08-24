@@ -1,0 +1,40 @@
+package com.advertine.deep.model;
+
+message DeepEnvelope {
+  required bytes event_id = 1;
+  // If original event produced multiple events after exploding,
+  // the output events have the same event_id, but consecutive sub_event_id.
+  optional int32 sub_event_id = 2;
+  optional string partition_key = 3;
+  optional bytes remote_address = 4;
+  optional int64 event_time = 5;
+  optional int64 server_time = 6;
+  required string client_id = 7;
+  required string tracker_id = 8;
+  optional string data_schema_url = 9;
+  required string data = 10;
+  // enrichments to apply in enrichment step
+  repeated DataEnrichment enrichments = 11;
+  // path to original event time in data (removed from data)
+  repeated string event_time_path = 12;
+}
+
+message DataEnrichment {
+  required string command = 1;
+  optional string options = 2;
+}
+
+message TrashEnvelope {
+  required bytes event_id = 1;
+  optional int64 server_time = 2;
+  required string client_id = 3;
+  required string tracker_id = 4;
+  // most probably error message
+  required string reject_reason = 5;
+  // full error with stack trace
+  optional string full_error = 6;
+  // the body of original request
+  optional string request_api_body = 7;
+  // for accounting
+  optional bytes remote_address = 8;
+}
